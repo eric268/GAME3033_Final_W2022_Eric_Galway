@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 8006163012028749970}
   - component: {fileID: 1829008929441548131}
   - component: {fileID: 333406307506740813}
+  - component: {fileID: 3839513600160571723}
   m_Layer: 0
   m_Name: AnvilPrefab
   m_TagString: Untagged
@@ -181,5 +182,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc2b53915efcdc47b0d67a58b79c66f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mAnimator: {fileID: 0}
   mFallSize: 0
+  mCurrentYPos: 0
+  mStartingHeght: 50
+  mFallenPosition: 0
+  mIsActive: 0
+--- !u!65 &3839513600160571723
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7228359297617887784}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.2, z: 1}
+  m_Center: {x: 0, y: 0.1, z: 0}
