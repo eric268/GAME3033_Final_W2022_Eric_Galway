@@ -17,6 +17,8 @@ public class MovementController : MonoBehaviour
     Rigidbody mRigidBody;
 
     public GameObject mFollowTransform;
+    public GameObject mLeftHandIKPosition;
+    public GameObject mRightHandIKPosition;
 
     readonly int isRunningHash = Animator.StringToHash("IsRunning");
     readonly int isWateringHash = Animator.StringToHash("IsWatering");
@@ -31,6 +33,7 @@ public class MovementController : MonoBehaviour
     public void OnMovement(InputValue value)
     {
         mInputVector = value.Get<Vector2>();
+        mAnimator.SetBool(isRunningHash, mPlayerController.mIsRunning);
     }
 
     public void OnLook(InputValue value)
@@ -45,6 +48,7 @@ public class MovementController : MonoBehaviour
 
         if (mPlayerController.mIsWatering)
         {
+            mPlayerController.WaterUsed();
             mPlayerController.mWateringCan.SetActive(true);
             mPlayerController.mBucket.SetActive(false);
         }
@@ -66,13 +70,13 @@ public class MovementController : MonoBehaviour
         var angle = mFollowTransform.transform.localEulerAngles.x;
 
 
-        if (angle > 180 && angle < 340)
+        if (angle < 10)
         {
-            angles.x = 340;
+            angles.x = 10;
         }
-        else if (angle < 180 && angle > 40)
+        else if (angle > 70)
         {
-            angles.x = 40;
+            angles.x = 70;
         }
 
         mFollowTransform.transform.localEulerAngles = angles;
@@ -80,12 +84,9 @@ public class MovementController : MonoBehaviour
         mFollowTransform.transform.localEulerAngles = new Vector3(angles.x, 0, 0);
 
 
-        if (!(mInputVector.magnitude > 0))
+        if ((mInputVector.magnitude == 0))
         {
-            mMoveDirection = Vector3.zero;
-        }
-        else
-        {
+            mPlayerController.mIsRunning = false;
             mAnimator.SetBool(isRunningHash, mPlayerController.mIsRunning);
         }
 
@@ -96,6 +97,6 @@ public class MovementController : MonoBehaviour
         mRigidBody.AddForce(vec, ForceMode.VelocityChange);
 
         //Assist in slowing player 
-        mRigidBody.velocity *= 0.99f;
+        mRigidBody.velocity *= 0.97f;
     }
 }

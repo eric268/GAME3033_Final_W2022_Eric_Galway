@@ -5,7 +5,11 @@ using UnityEngine;
 public class FallingObjects : MonoBehaviour
 {
     private Animator mAnimator;
+    private Rigidbody mRigidBody;
+    public float mScale;
     public float mFallSize;
+
+    public float mFallSpeed;
 
     public float mCurrentYPos;
     public float mStartingHeght = 50.0f;
@@ -16,6 +20,7 @@ public class FallingObjects : MonoBehaviour
     void Start()
     {
         mAnimator = GetComponent<Animator>();
+        mRigidBody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -27,17 +32,24 @@ public class FallingObjects : MonoBehaviour
             mFallSize = mCurrentYPos / mStartingHeght;
             mAnimator.SetFloat(fallingHash, mFallSize);
 
-
+            mRigidBody.AddForce(Vector3.down * mFallSpeed, ForceMode.Acceleration);
         }
     }
 
     private void OnEnable()
     {
         mIsActive = true;
+        transform.localScale = new Vector3(mScale, mScale, mScale);
     }
 
-    private void OnDisable()
+    public void UpdateFallingSpeed(float speed)
     {
-        mIsActive = false;
+        mFallSpeed = speed;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        print("Trigger Hit");
+        gameObject.SetActive(false);
     }
 }
