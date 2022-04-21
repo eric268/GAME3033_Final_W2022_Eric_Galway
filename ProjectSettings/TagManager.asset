@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Water
   - Anvil
+  - Bucket
   layers:
   - Default
   - TransparentFX

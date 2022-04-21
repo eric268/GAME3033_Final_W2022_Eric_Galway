@@ -24,8 +24,7 @@ public class FlowerScript : MonoBehaviour
         {
             if (!mIsBeingWatered)
             {
-
-                float decreaseAmount = Time.fixedDeltaTime * 2.5f;
+                float decreaseAmount = Time.fixedDeltaTime * 5.0f;
                 transform.localScale = new Vector3(transform.localScale.x - decreaseAmount, transform.localScale.y - decreaseAmount, transform.localScale.z - decreaseAmount);
 
                 if (transform.localScale.x <= 0.0f)

@@ -15,12 +15,14 @@ public class FallingObjects : MonoBehaviour
     public float mStartingHeght = 50.0f;
     public float mFallenPosition = 0.0f;
     public bool mIsActive;
+
+    public bool mShowDamagingAnvil = false;
     readonly int fallingHash = Animator.StringToHash("FallSize");
     // Start is called before the first frame update
     void Start()
     {
         mAnimator = GetComponent<Animator>();
-        mRigidBody = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -38,8 +40,14 @@ public class FallingObjects : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!mRigidBody)
+            mRigidBody = GetComponent<Rigidbody>();
+
         mIsActive = true;
         transform.localScale = new Vector3(mScale, mScale, mScale);
+        mFallSpeed += 1.0f;
+        mFallSpeed = Mathf.Clamp(mFallSpeed, 0.0f, 100.0f);
+        mRigidBody.velocity = Vector3.zero;
     }
 
     public void UpdateFallingSpeed(float speed)
@@ -47,9 +55,16 @@ public class FallingObjects : MonoBehaviour
         mFallSpeed = speed;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (!other.gameObject.CompareTag("Flower"))
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            mRigidBody.velocity = Vector3.zero;
+            mShowDamagingAnvil = true;
+        }
+        else if (!mShowDamagingAnvil)
+        {
             gameObject.SetActive(false);
+        }
     }
 }

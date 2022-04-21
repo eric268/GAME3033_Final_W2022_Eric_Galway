@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mScale: 100
   mFallSize: 1
-  mFallSpeed: 0
+  mFallSpeed: 1
   mCurrentYPos: 0
   mStartingHeght: 50
   mFallenPosition: 0

@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public bool mIsRunning;
     public bool mHasWater;
     public bool mInRangeOfFlower;
+    public bool mWasHitByAnvil;
+    public bool mGameIsPaused;
 
     public GameObject mBucket;
     public GameObject mBucketWater;
@@ -27,15 +29,11 @@ public class PlayerController : MonoBehaviour
         {
             mBucketWater.SetActive(true);
             mHasWater = true;
+            other.gameObject.SetActive(false);
         }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
         if (other.gameObject.CompareTag("Flower"))
         {
             mInRangeOfFlower = true;
-            print("Flower hit");
         }
     }
 

@@ -27,6 +27,7 @@ public class FallingObjectSpawner : MonoBehaviour
     public float mAnvilScale = 100.0f;
 
     public float mYPos = 50.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,13 +52,21 @@ public class FallingObjectSpawner : MonoBehaviour
         
     }
 
+    public void UpdateSpawnWithScore()
+    {
+        mChanceOfSpawningAnvil += 0.1f;
+        mSpawnRate -= 0.1f;
+        CancelInvoke(nameof(Spawn));
+        InvokeRepeating(nameof(Spawn), 1.0f, mSpawnRate);
+    }
+
     void Spawn()
     {
         float chance = Random.Range(0.0f, 1.0f);
         float xPos = Random.Range(mMinXBounds, mMaxXBounds);
         float zPos = Random.Range(mMinZBounds, mMaxZBounds);
 
-        if (chance <= 0.1f)
+        if (chance <= mChanceOfSpawningAnvil)
         {
             mAnvilArray[mAnvilIndex].gameObject.SetActive(true);
             mAnvilArray[mAnvilIndex++].gameObject.transform.position = new Vector3(xPos, mYPos, zPos);
