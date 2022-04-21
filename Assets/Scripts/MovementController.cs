@@ -20,6 +20,8 @@ public class MovementController : MonoBehaviour
     public GameObject mFollowTransform;
     public GameObject mPauseMenu;
 
+    AudioSource mAudioSource;
+
     readonly int isRunningHash = Animator.StringToHash("IsRunning");
     readonly int isWateringHash = Animator.StringToHash("IsWatering");
     readonly int isHitHash = Animator.StringToHash("IsHit");
@@ -31,6 +33,7 @@ public class MovementController : MonoBehaviour
         mPlayerController = GetComponent<PlayerController>();
         mAnimator = GetComponent<Animator>();
         mRigidBody = GetComponent<Rigidbody>();
+        mAudioSource = GetComponent<AudioSource>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -165,7 +168,7 @@ public class MovementController : MonoBehaviour
             mRigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
             mRigidBody.constraints = RigidbodyConstraints.FreezeRotationZ;
 
-            
+            mAudioSource.Play();
             mFollowTransform.isStatic = true;
             Invoke(nameof(OpenGameOverLevel), 2.0f);
         }
