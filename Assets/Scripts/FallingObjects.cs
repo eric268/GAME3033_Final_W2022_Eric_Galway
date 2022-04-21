@@ -49,7 +49,7 @@ public class FallingObjects : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("Trigger Hit");
-        gameObject.SetActive(false);
+        if (!other.gameObject.CompareTag("Flower"))
+            gameObject.SetActive(false);
     }
 }

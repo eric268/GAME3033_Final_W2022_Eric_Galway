@@ -4,31 +4,45 @@ using UnityEngine;
 
 public class FlowerScript : MonoBehaviour
 {
-    bool mIsCollidingWithPlayer;
-    bool mIsBeingWatered;
-    float mStartingScale;
-    float mRegrowSpeed;
+    public bool mIsBeingWatered;
+    public float mRegrowSpeed;
+    bool mFlowerDied = false;
+    Vector3 mStartingScale;
+    UIScript mUIScript;
 
     // Start is called before the first frame update
     void Start()
     {
-        mStartingScale = transform.localScale.x;
+        mStartingScale = transform.localScale;
+        mUIScript = FindObjectOfType<UIScript>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (!mIsBeingWatered)
+        if (!mFlowerDied)
         {
-            float decreaseAmount = /*mStartingScale **/ Time.deltaTime /10.0f;
-            transform.localScale = new Vector3(transform.localScale.x - decreaseAmount, transform.localScale.y- decreaseAmount, transform.localScale.z - decreaseAmount);
-        }
-        else
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, mRegrowSpeed);
-            if (transform.localScale == Vector3.one)
+            if (!mIsBeingWatered)
             {
-                mIsBeingWatered = false;
+
+                float decreaseAmount = Time.fixedDeltaTime * 2.5f;
+                transform.localScale = new Vector3(transform.localScale.x - decreaseAmount, transform.localScale.y - decreaseAmount, transform.localScale.z - decreaseAmount);
+
+                if (transform.localScale.x <= 0.0f)
+                {
+                    mFlowerDied = true;
+                }
+            }
+            else
+            {
+                mUIScript.PauseTimer();
+                transform.localScale = Vector3.Lerp(transform.localScale, mStartingScale, mRegrowSpeed);
+                if (mStartingScale.magnitude - transform.localScale.magnitude <= 0.1f)
+                {
+                    transform.localScale = mStartingScale;
+                    mIsBeingWatered = false;
+                    mUIScript.ResetTimer();
+                }
             }
         }
     }

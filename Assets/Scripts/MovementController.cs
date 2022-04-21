@@ -32,7 +32,9 @@ public class MovementController : MonoBehaviour
 
     public void OnMovement(InputValue value)
     {
-        mInputVector = value.Get<Vector2>();
+        if (mPlayerController.mIsWatering && mPlayerController.mInRangeOfFlower)
+            return;
+            mInputVector = value.Get<Vector2>();
         mAnimator.SetBool(isRunningHash, mPlayerController.mIsRunning);
     }
 
@@ -43,20 +45,15 @@ public class MovementController : MonoBehaviour
 
     public void OnWater(InputValue value)
     {
+        if (mPlayerController.mIsWatering)
+            return;
+
         mPlayerController.mIsWatering = value.isPressed;
         mAnimator.SetBool(isWateringHash, mPlayerController.mIsWatering);
 
-        if (mPlayerController.mIsWatering)
-        {
-            mPlayerController.WaterUsed();
-            mPlayerController.mWateringCan.SetActive(true);
-            mPlayerController.mBucket.SetActive(false);
-        }
-        else
-        {
-            mPlayerController.mWateringCan.SetActive(false);
-            mPlayerController.mBucket.SetActive(true);
-        }
+        if (mPlayerController.mHasWater && mPlayerController.mInRangeOfFlower)
+            mPlayerController.mFlower.GetComponentInChildren<FlowerScript>().mIsBeingWatered = true;
+        WaterUsed();
     }
 
     // Update is called once per frame
@@ -83,20 +80,39 @@ public class MovementController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, mFollowTransform.transform.rotation.eulerAngles.y, 0);
         mFollowTransform.transform.localEulerAngles = new Vector3(angles.x, 0, 0);
 
+        mMoveDirection = transform.forward * mInputVector.y + transform.right * mInputVector.x;
 
-        if ((mInputVector.magnitude == 0))
+        if ((mMoveDirection.magnitude > 0.1f))
+        {
+            mPlayerController.mIsRunning = true;
+        }
+        else
         {
             mPlayerController.mIsRunning = false;
-            mAnimator.SetBool(isRunningHash, mPlayerController.mIsRunning);
         }
-
-        mMoveDirection = transform.forward * mInputVector.y + transform.right * mInputVector.x;
+        mAnimator.SetBool(isRunningHash, mPlayerController.mIsRunning);
 
         Vector3 vec = mMoveDirection * mWalkSpeed * Time.deltaTime;
 
         mRigidBody.AddForce(vec, ForceMode.VelocityChange);
 
-        //Assist in slowing player 
         mRigidBody.velocity *= 0.97f;
+    }
+
+    public void WaterUsed()
+    {
+        mPlayerController.mBucketWater.SetActive(false);
+        mPlayerController.mHasWater = false;
+
+        mPlayerController.mWateringCan.SetActive(true);
+        mPlayerController.mBucket.SetActive(false);
+    }
+
+    public void WateringEnded()
+    {
+        mPlayerController.mIsWatering = false;
+        mPlayerController.mWateringCan.SetActive(false);
+        mPlayerController.mBucket.SetActive(true);
+        mAnimator.SetBool(isWateringHash, mPlayerController.mIsWatering);
     }
 }
